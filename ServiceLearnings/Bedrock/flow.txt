@@ -1,0 +1,210 @@
+ IAM User → AWS Bedrock → Model Invocation Logging → CloudWatch Logs → Python Script → Terminal Consumption Report
+
+
+2. Final architecture
+
+(a) IAM User
+
+   AWS credentials + Bedrock permissions
+
+(b) Python Script + Boto3
+
+   Converse API + optional requestMetadata
+
+(3) Amazon Bedrock
+
+   Model invoke hoga, response aur token usage generate hoga
+
+(d) Bedrock Model Invocation Logging
+
+    Enabled hone par invocation records capture honge
+
+(e) CloudWatch Log Group
+
+    Invocation logs store honge
+
+(f) Python + CloudWatch Logs Insights API
+
+    start_query → get_query_results
+
+(g) Terminal Usage Report
+
+    User ID, Requests, Input Tokens, Output Tokens, Model, Estimated Cost
+
+
+
+
+# Prerequisites 
+
+Requirement	Purpose
+AWS IAM User	-------Bedrock model ko invoke karne ke liye
+Bedrock model access	----------Successful inference ke liye
+Python + Boto3	------AWS API calls execute karne ke liye
+CloudWatch Log Group  ----------	Invocation records store karne ke liye
+Bedrock logging IAM service role	---------Bedrock ko logs write karne ki permission dene ke liye
+Model Invocation Logging configuration   ---------	Logging enable karne ke liye
+CloudWatch Logs Insights permissions  -----------	Logs query karke consumption retrieve karne ke liye
+Model pricing configuration --------	Estimated cost calculate karne ke liye
+
+
+
+#) what is Model Invocation Logging Configuration?
+Model Invocation Logging Configuration AWS Bedrock ka ek feature hai, jiske through hum Bedrock model ko ki gayi API requests aur unke usage details ko
+ automatically record karwa sakte hain.
+
+records ho skte h ---
+Field	                Kya batata hai?
+identity.arn	-------Kis IAM user ya role ne request ki
+modelId	---------Kaunsa model invoke hua
+requestId	---------Request ka unique ID
+timestamp	--------Request kab hui
+input.inputTokenCount	------Input tokens
+output.outputTokenCount	-----Output tokens
+requestMetadata	------Tumhare Python code se bheje gaye optional tags
+
+
+
+
+
+
+
+
+
+
+# code :-  some understanding on code 
+
+
+"""Report Bedrock model invocations from CloudWatch Logs Insights.
+
+Prerequisites: model invocation logging enabled in the target region,
+logs delivered to the configured log group, and AWS credentials with
+logs:StartQuery and logs:GetQueryResults permissions.
+"""
+import os  # Operating system se interact karti hai
+import sys # Python program ko control karne mein help karti hai. example: Error aane par program exit karna
+import time  # Time-related operations perform karti hai. example: CloudWatch query complete hone ka wait karna
+from datetime import datetime, timedelta, timezone # datetime Python ka module hai aur hum usmein se 3 specific components import kar rahe hain.  # datetime: Current date aur time get karna, timedelta: Time mein hours/days add ya subtract karna, timezone: Time zone specify karna, jaise UTC
+
+import boto3 # Boto3 ki help se hum Python code ke through AWS services ke APIs call kar sakte hain. 
+from botocore.exceptions import BotoCoreError, ClientError, ProfileNotFound # AWS-related exceptions handle krne k liye
+
+REGION = os.getenv('AWS_REGION', 'us-east-1')
+PROFILE = os.getenv('AWS_PROFILE')
+LOG_GROUP = os.getenv('BEDROCK_LOG_GROUP', '/aws/bedrock/model-invocations-poc')
+IAM_ARN = os.getenv('BEDROCK_IAM_ARN', 'arn:aws:iam::817977002522:user/Tanisha')
+HOURS = int(os.getenv('BEDROCK_REPORT_HOURS', '24'))
+
+# IAM identity is supplied by AWS in invocation logging. Metadata is optional.
+QUERY = """
+fields identity.arn as iamUser,
+       modelId,
+       input.inputTokenCount as inputTokenValue,
+       output.outputTokenCount as outputTokenValue
+| filter identity.arn = "__IAM_ARN__"
+| stats count(*) as requests,
+        sum(inputTokenValue) as inputTokens,
+        sum(outputTokenValue) as outputTokens
+  by iamUser, modelId
+| sort requests desc
+"""
+
+def rows_to_dicts(rows):
+    return [{cell['field']: cell.get('value', '') for cell in row} for row in rows]
+
+
+def main():
+    if HOURS < 1:
+        raise ValueError('BEDROCK_REPORT_HOURS must be >= 1')
+    session = boto3.Session(region_name=REGION)
+    sts_identity = session.client('sts').get_caller_identity()
+    if sts_identity['Account'] != '817977002522':
+        raise RuntimeError('Wrong AWS account! Refusing to query logs.')
+    logs = session.client('logs')
+    end = datetime.now(timezone.utc)
+    start = end - timedelta(hours=HOURS)
+    query = QUERY.replace("__IAM_ARN__", IAM_ARN)
+    response = logs.start_query(
+        logGroupName=LOG_GROUP,
+        startTime=int(start.timestamp()),
+        endTime=int(end.timestamp()),
+        queryString=query,
+        limit=10000,
+    )
+    query_id = response['queryId']
+    for _ in range(60):
+        result = logs.get_query_results(queryId=query_id)
+        status = result['status']
+        if status == 'Complete':
+            break
+        if status in ('Failed', 'Cancelled', 'Timeout', 'Unknown'):
+            raise RuntimeError(f'Logs Insights query ended: {status}')
+        time.sleep(2)
+    else:
+        raise TimeoutError('Logs Insights query did not finish in 120 seconds')
+
+    rows = rows_to_dicts(result.get('results', []))
+    print('\n========== BEDROCK USER CONSUMPTION =========')
+    print(f'IAM User       : {IAM_ARN}')
+    print(f'Region         : {REGION}')
+    print(f'Time Range     : Last {HOURS} hours')
+    print(f'Log Group      : {LOG_GROUP}')
+    print('---------------------------------------------')
+    if not rows:
+        print('No matching invocation logs found.')
+        print('Check logging, region, IAM ARN and time range.')
+    total_requests = total_input = total_output = 0
+    for row in rows:
+        requests = int(float(row.get('requests') or 0))
+        input_tokens = int(float(row.get('inputTokens') or 0))
+        output_tokens = int(float(row.get('outputTokens') or 0))
+        total_requests += requests
+        total_input += input_tokens
+        total_output += output_tokens
+        print(f"Model ID       : {row.get('modelId', 'Unknown')}")
+        print(f'Requests       : {requests:,}')
+        print(f'Input Tokens   : {input_tokens:,}')
+        print(f'Output Tokens  : {output_tokens:,}')
+        print('---------------------------------------------')
+    print(f'Total Requests : {total_requests:,}')
+    print(f'Input Tokens   : {total_input:,}')
+    print(f'Output Tokens  : {total_output:,}')
+    print(f'Total Tokens   : {total_input + total_output:,}')
+    print('=============================================')
+    if len(rows) >= 10000:
+        print('WARNING: Query result limit reached; totals may be incomplete.')
+    print('Note: Counts represent matching logged invocations, not necessarily all attempts.')
+
+
+if __name__ == '__main__':
+    try:
+        main()
+    except (BotoCoreError, ClientError, ProfileNotFound, ValueError, RuntimeError, TimeoutError) as exc:
+        print(f'ERROR: {exc}', file=sys.stderr)
+        sys.exit(1)
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------
+
+using Cloud trail --- 
+
+outcome -- user request count and model identification
+
+Flow :- 
+
+IAM User ---> AWS Bedrock ---> AWS CloudTrail ---> CloudTrail Event History ---> Boto3 Python Script (LookupEvents API) ---> Terminal Request Count Report
+
+
+Some code info:- 
+
+Name	               Type	                                 Purpose
+LookupEvents	       AWS CloudTrail API	                 CloudTrail Event History retrieve karna
+get_paginator()	       Boto3 method	                         Paginated results handle karna
+paginate()	           Boto3 paginator method	             API calls karke event pages retrieve karna
+
+
+API operation	                      Purpose
+Converse                              Model se normal conversation request
+ConverseStream	                      Model response streaming mein lena
+InvokeModel	                          Model ko directly invoke karna
+InvokeModelWithResponseStream	      Direct model invocation with streaming response
