@@ -14,29 +14,19 @@
 
 # making it more modular
 
-
 def shift_right(list1, k):
-
     n = len(list1)
-
     if n == 0:
         return list1
 
     k = k % n
-
     for j in range(k):
-
         temp = list1[-1]
-
         for i in range(n-1, 0, -1):
             list1[i] = list1[i-1]
 
         list1[0] = temp
-
     return list1
 
-
-
-numbers = [1, 2, 3, 4, 5]
-
-print(shift_right(numbers, 4))
+numbers = [1,2,3,4,5]
+print(shift_right(numbers, 2))
