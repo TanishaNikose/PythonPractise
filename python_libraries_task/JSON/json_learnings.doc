@@ -1,0 +1,44 @@
+1. What is the JSON library in Python?
+
+It is a lightweight data format used to store and exchange information between applications.
+
+For example, imagine AWS returns information about an EC2 instance:
+{
+    "InstanceId": "i-123456789",
+    "InstanceType": "t2.micro",
+    "State": "running"
+}
+
+This is JSON-formatted data. Python provides a built-in library called json to work with JSON data.
+
+How do we import the JSON library : -
+
+import json
+
+------------------------ Two most important methods ----------------------------
+There are two methods you should understand first:
+1. json.dumps()
+2. json.loads()
+
+A. json.dumps()
+dumps() converts a Python object into a JSON-formatted string.
+
+Remember: json.dumps() converts a Python dictionary into a JSON string.
+
+B. json.loads()
+loads() converts a JSON-formatted string into a Python object.
+
+Difference between dumps() and loads()
+Method	Conversion	Output
+json.dumps()	Python object → JSON string	str
+json.loads()	JSON string → Python object	dict, list, etc.
+
+An easy way to remember:
+- dumps → Dump Python data into a JSON string.
+- loads → Load JSON string into Python data.
+
+Two more methods: dump() and load()
+These are also important.
+Method	Purpose
+json.dump()	Writes JSON data into a file
+json.load()	Reads JSON data from a file

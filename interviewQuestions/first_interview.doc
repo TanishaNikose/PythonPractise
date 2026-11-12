@@ -1,0 +1,33 @@
+1. EC2 Troubleshooting: Your EC2 instance is running, but your application is not accessible from the internet. How would you troubleshoot it?
+
+2. Deployment Health: Can a deployment be successful while the application is still unhealthy? How would you identify that?
+
+3. Boto3: Are you familiar with Boto3? How can you use it to interact with AWS services?
+
+4. EC2 Status Check: How would you write a Boto3 script to check whether a particular EC2 instance is running?
+
+5. Stopped EC2 Instances: How would you use Boto3 to retrieve a list of all stopped EC2 instances?
+
+6. Production Troubleshooting: Suppose your production application is responding slowly, but CPU utilization is only 20%. How would you investigate the issue?
+
+7. Docker and Kubernetes: If an application works locally inside Docker but fails after deployment to EKS, how would you troubleshoot it?
+
+8. Kubernetes Networking: What is the difference between a container port and a Kubernetes Service port? What is targetPort?
+
+9. DNS: Can you explain how DNS resolution works when a user enters a website URL into a browser?
+
+10. CI/CD: Can you briefly explain what CI/CD is and how it works?
+
+11. AWS CodeDeploy: What is an appspec.yml file in AWS CodeDeploy?
+
+12. Jenkins Troubleshooting: Suppose your Jenkins pipeline has been stuck for a while. How would you troubleshoot it?
+
+13. CI/CD Difference: What is the difference between Continuous Integration and Continuous Delivery?
+
+14. AWS CloudWatch: What is the difference between CloudWatch Metrics, Logs, and Alarms?
+
+15. Daily Responsibilities: How does your day-to-day work look? How does your workday start, and what are your roles and responsibilities?
+
+16. Agile Methodology: Do you follow Agile methodology in your team?
+
+17. Sprint Duration: How long is your sprint?

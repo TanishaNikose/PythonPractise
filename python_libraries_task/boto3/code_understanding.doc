@@ -1,0 +1,208 @@
+(1) import boto3 ---->
+
+boto3 is the AWS SDK (Software Development Kit) for Python. In simple words, it allows Python code to communicate with AWS services.
+For example, using boto3, Python can interact with:
+- AWS S3
+- EC2
+- IAM
+- CloudWatch
+- CloudTrail
+- DynamoDB
+- AWS Bedrock
+
+So, we can say that Boto3 is a library that supports multiple AWS services.
+
+But each AWS service has different operations.
+
+For example:
+*AWS service*	                        *Operations*
+S3	                                    Upload files, download files, list buckets
+EC2	                                    Start instances, stop instances, describe instances
+IAM	                                    List users, create users, attach policies
+CloudTrail	                            Lookup events, describe trails
+Bedrock	                                Invoke models, retrieve model information
+CloudWatch	                            Retrieve metrics, query logs
+
+So how does Boto3 know which AWS service you want to communicate with?
+That's where client() comes in.
+client() creates a service-specific interface that allows your Python code to communicate with a particular AWS service.
+
+Code Example:- 
+
+cloudtrail = boto3.client('cloudtrail')
+
+What happens internally when we create a client?
+There are several things happening behind the scenes.
+1. Boto3 identifies that you want to work with CloudTrail.
+2. It loads the CloudTrail service definition and its available API operations.
+3. It resolves AWS configuration, such as credentials and region, from your environment, profile or other configured sources.
+4. It creates a client object for communicating with the CloudTrail API.
+
+MostIMP :-  Creating a client does not mean that an API request has already been sent to AWS. It creates the interface. An actual AWS API request happens when you call a method on that client.
+
+We can also use resource().
+4. What is the difference between client and resource?
+Boto3 provides two ways to interact with AWS:
+- client() – Low-level interface.
+- resource() – Higher-level, object-oriented interface.
+
+Major Differnce :- 
+
+*Client()*	                                      *Resource()*
+Low-level interface                            	  High-level interface
+Direct API operations	                          Object-oriented operations
+Supports all service API operations   	          Supports only defined resource abstractions
+Returns Python dictionaries	                      Returns resource objects and collections in supported cases
+
+The parameters taken by client()
+
+boto3.client(
+    service_name,
+    region_name=None,
+    api_version=None,
+    use_ssl=True,
+    verify=None,
+    endpoint_url=None,
+    aws_access_key_id=None,
+    aws_secret_access_key=None,
+    aws_session_token=None,
+    config=None
+)
+
+IMPnote - never get hardcoded these values, Always use AWS CLI configured profile or .env file for security purpose.
+
+
+----------------" Famous methods used with Boto3 clients "--------------------
+There are two categories:
+1. General client helper methods.
+2. AWS service-specific methods.
+
+A. General client methods
+These are some useful methods available on client objects.
+*Method*	                                               *Purpose*
+get_paginator()	                                           Handles multiple pages of API results
+get_waiter()	                                           Waits until an AWS resource reaches a particular state
+can_paginate()	                                     x      Checks whether an operation supports pagination
+generate_presigned_url()	                               Generates a temporary URL for a supported operation
+close()	                                                   Closes the underlying client connection
+
+
+B. AWS service-specific methods
+
+This is where things get interesting.
+Each AWS service has its own set of methods.
+
+For example:- 
+
+(1) S3 client :- 
+
+
+s3.list_buckets()
+s3.create_bucket()
+s3.delete_bucket()
+s3.list_objects_v2()
+
+(2) EC2 client
+
+ec2.describe_instances()
+ec2.run_instances()
+ec2.start_instances()
+ec2.stop_instances()
+ec2.terminate_instances()
+
+(3) IAM client
+
+iam.list_users()
+iam.get_user()
+iam.list_roles()
+iam.list_policies()
+
+(4) CloudTrail client
+
+cloudtrail.lookup_events()
+cloudtrail.describe_trails()
+cloudtrail.get_trail_status()
+
+
+(5) CloudWatch client
+
+cloudwatch.get_metric_data()
+cloudwatch.list_metrics()
+cloudwatch.put_metric_data()
+
+(6) STS client
+
+sts.get_caller_identity()
+
+
+-------------------------------------------------------------------------------------------------------------------------
+
+Difference between client() and session() of boto3
+
+1. What is a Session in Boto3?
+A Session is an object that manages your AWS connection configuration.
+
+It holds information such as:
+- AWS credentials (access key and secret key, or a credential provider).
+- AWS region.
+- Profile name.
+- Other configuration settings.
+
+2. What is a Client in Boto3?
+A Client provides an interface to interact with a particular AWS service.
+
+import boto3
+
+ec2 = boto3.client('ec2')
+s3 = boto3.client('s3')
+iam = boto3.client('iam')
+
+Here:
+- ec2 is an EC2 client.
+- s3 is an S3 client.
+- iam is an IAM client.
+
+Difference:- 
+
+Session	                                            Client
+Manages AWS configuration and credentials       	Interacts with an AWS service
+Can be used to create multiple clients	            Represents one particular AWS service
+Created using boto3.Session()	                    Created using session.client() or boto3.client()
+Defines region, profile and credentials	            Uses those settings to make service API calls
+
+
+1. What is a Resource in Boto3?
+A Resource is a higher-level, object-oriented way to interact with AWS services.
+
+In simple words:
+- Client: You interact with AWS using API operation methods.
+- Resource: You interact with AWS using objects and their associated methods and attributes.
+
+
+Feature                              	Client	                                          Resource
+Interface	                           Low-level	                                      High-level
+Response	                          Usually dictionary	                            AWS resource objects
+API operations	                       Direct API methods	                            Object-oriented methods
+Availability	                   Broad AWS service coverage	                         Only supported services
+Example	                               s3.list_buckets()	                              s3.buckets.all()
+
+
+difference using client and resource:-
+
+# using client
+
+ec2 = boto3.client('ec2')
+
+response = ec2.describe_instances()
+
+for reservation in response['Reservations']:
+    for instance in reservation['Instances']:
+        print(instance['InstanceId'])
+
+# Using a resource:
+
+ec2 = boto3.resource('ec2')
+
+for instance in ec2.instances.all():
+    print(instance.id)
+
