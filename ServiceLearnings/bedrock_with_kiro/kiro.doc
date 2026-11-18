@@ -1,0 +1,167 @@
+1. First, what is AWS Bedrock?
+Amazon Bedrock is an AWS service that provides access to multiple foundation AI models through APIs.
+
+For example:
+- Anthropic Claude
+- Amazon Nova
+- Meta Llama
+- Other supported foundation models
+
+We can send a prompt to a model and receive an AI-generated response.
+
+For example:
+
+Send prompt: "Explain Docker in simple words."
+                |
+                |
+          Amazon Bedrock
+        (AI model service)
+        Claude / Nova / Llama
+                |
+                |
+AI Response: Docker is a platform used to package applications and their dependencies into containers.
+So, Bedrock provides the AI models and APIs that applications can use. 
+
+
+___________________________________________________________________________________________________________________________________________
+
+2. What is Kiro?
+
+Kiro is an AI-powered Integrated Development Environment (IDE) developed by AWS.
+
+Think of it as an AI-assisted coding environment.
+
+Normally, when you write Python code:
+1. You understand the requirement.
+2. You write the code.
+3. You debug errors.
+4. You write tests.
+5. You improve the code.
+
+Kiro helps with these activities using AI.
+
+For example, you can give Kiro this instruction:
+
+"Create a Python script that connects to AWS S3 and lists all buckets."
+
+Kiro can help you:
+- Generate Python code.
+- Explain existing code.
+- Identify bugs.
+- Suggest improvements.
+- Generate test cases.
+- Understand a complete project.
+- Work with requirements and specifications.
+
+In simple words:
+- Bedrock = AWS service that provides AI models.
+- Kiro = AI-powered development environment that helps developers write and manage code.
+
+___________________________________________________________________________________________________________________________________________
+
+3. How are Bedrock and Kiro connected?
+
+Kiro itself is built on Amazon Bedrock. It uses foundation models through Bedrock to power its AI coding capabilities.
+
+Let's understand the relationship:
+
+             Kiro IDE
+  (Developer gives instructions)
+Example: Create a Python script to monitor AWS resources.
+                   |
+                   |
+                Kiro AI Agent
+            (Understands the requirement, plans tasks and uses tools.)
+                   |
+                   |
+            Amazon Bedrock
+        (Foundation Models)
+        Provides the AI model intelligence.
+                   |
+                   |
+            AI-generated output
+    Code, explanations, tests, debugging suggestions, etc.
+
+Think about it this way:
+- Bedrock is the engine that provides AI model capabilities.
+- Kiro is the development environment that uses AI to help you build software.
+
+One important point: You don't necessarily need to create your own Bedrock model or write a Bedrock API script to start using Kiro.
+Kiro provides its own agent experience.
+
+___________________________________________________________________________________________________________________________________________
+
+4. What can we actually do with Kiro?
+
+There are some important features we should understand.
+
+1. Agentic Chat
+   You can communicate with Kiro using normal English.
+   
+   Example:
+   "Explain this Python code and tell me if there are any errors."
+    Kiro can inspect your project and help you understand it.
+
+2. Spec-driven development
+   This is one of Kiro's important features.
+   Suppose your manager gives you this requirement:
+   "Create a Python application that monitors EC2 instances."
+
+   Instead of directly generating code, Kiro can first prepare:
+   requirements.md – What should the application do?
+   design.md – How will the application work?
+   tasks.md – What steps are needed to implement it?
+
+   After reviewing these documents, we can ask Kiro to implement the tasks.
+
+3. Steering
+
+   Steering files provide project-specific instructions to Kiro.
+
+   For example:
+   - Always use Python 3.10.
+   - Follow PEP 8 coding standards.
+   - Use boto3 for AWS operations.
+   - Handle exceptions properly.
+
+Note  :-  
+       PEP 8 (Python Enhancement Proposal 8) is the official style guide for writing clean, readable, and consistent Python code. 
+       Authored by Guido van Rossum, Barry Warsaw, and Alyssa Coghlan in 2001, its core philosophy is that "code is read much more often than it is written."
+       While following PEP 8 is not mandatory for code execution, it is the industry standard across the Python community for ensuring uniformity and easier collaboration. 
+       Key guidelines include using 4 spaces for indentation, limiting line lengths to 79 characters, placing imports at the top of the file,
+       using proper whitespace around operators, and following standard naming conventions (snake_case for variables and functions, PascalCase for classes, and UPPER_SNAKE_CASE for constants).
+
+       This helps Kiro follow your project's conventions.
+
+4. Hooks:- 
+
+   Hooks allow you to automate certain actions when events occur.
+
+   For example, when you save a Python file, you could configure a hook to ask Kiro to review the code or generate documentation.
+   These are documented Kiro capabilities.
+
+   ___________________________________________________________________________________________________________________________________________
+
+5. How should you start learning Kiro?
+
+    (1) Install Kiro
+
+    Visit the official website:
+
+    Kiro official website
+    Download the IDE for Windows or macOS.
+
+    (2) Sign in and explore the IDE
+    Understand the editor, chat panel, agent mode and model selection.
+
+    (3) Create a Python project
+    Open a small Python project in Kiro and ask it to explain your existing code.
+
+    (4) Learn Agentic Chat
+    Give it instructions and understand how it analyzes and modifies code.
+
+    (5) Learn Spec-driven development
+    Create a small project specification and let Kiro implement it.
+
+    (6) Learn AWS integration
+    Understand how Kiro can work with AWS tools, AWS documentation, MCP servers and Bedrock services.
