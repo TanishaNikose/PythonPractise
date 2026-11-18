@@ -1,0 +1,25 @@
+This is particularly important for AWS automation scripts because you'll often need to:
+- Fetch CloudTrail events for the last 24 hours.
+- Track AWS usage daily or monthly.
+- Calculate time differences.
+- Convert timestamps into UTC.
+- Filter logs based on date and time.
+
+1. What is the datetime library?
+datetime is a built-in Python module used to work with dates and times.
+
+For example:
+- Today's date: 16 November 2026
+- Current time: 06:56 PM
+- Yesterday's date
+- Time after 2 hours
+- Difference between two dates
+You don't need to install it separately.
+
+# importing statement :-
+
+from datetime import datetime, timedelta, timezone
+
+Here is an important distinction:
+- datetime (first one) is the module.
+- datetime, timedelta, and timezone (inside the import) are classes provided by that module.

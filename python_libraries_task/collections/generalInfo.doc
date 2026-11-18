@@ -1,0 +1,35 @@
+1. What is collections in Python?
+
+collections is a built-in Python module.
+A module is simply a Python file that contains reusable code, such as functions, classes, and variables.
+
+Python already provides several built-in modules, for example:
+*Module*                                                       	*Purpose*
+json	                                                        Work with JSON data
+datetime	                                                    Work with dates and times
+collections                                                  	Provides specialized data structures
+math	                                                        Mathematical operations
+os	                                                            Interact with the operating system
+
+we don't need to install collections separately. It comes with Python.
+
+2. Then what is defaultdict?
+Here is the important distinction:
+- collections is the module name.
+- defaultdict is a class inside that module.
+
+collections is the python module, where as defaultdict(class), counter(class), deque(class), namedtuple(Factory function) of this python module.
+So, defaultdict is provided by the collections module.
+
+3. Why don't we write import defaultdict?
+Because defaultdict is not a standalone module. It is a class inside the collections module.
+
+5. Important difference between these imports
+*Import statement*	                             *What you import*	                               *How you use it*
+import json	                                     Entire module	                                     json.dumps()
+from json import dumps	                         Specific function	                                  dumps()
+import collections	                             Entire module	                                  collections.defaultdict()
+from collections import defaultdict	             Specific class	                                     defaultdict()
+
+Remember this concept:
+import and from ... import ... are two ways to access reusable Python code. They don't mean that the imported item must always be a library or module. It can be a function, class, or other defined object.
