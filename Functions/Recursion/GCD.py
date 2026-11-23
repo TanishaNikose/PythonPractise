@@ -3,16 +3,16 @@
 # GCD stands for Greatest Common Divisor. It is the largest number that can divide two numbers completely (without leaving a remainder).
 
 # # without recursion
-# num1 = 20
-# num2 = 18
+num1 = 12
+num2 = 18
 
-# gcd = 1
+gcd = 1
 
-# for i in range(1, min(num1, num2)+1):
-#     if num1 % i == 0 and num2 % i == 0:
-#         gcd = i
+for i in range(1, min(num1, num2)+1):
+    if num1 % i == 0 and num2 % i == 0:
+        gcd = i
 
-# print("GCD", i)
+print("GCD", gcd)
 
 
 # using recursin
