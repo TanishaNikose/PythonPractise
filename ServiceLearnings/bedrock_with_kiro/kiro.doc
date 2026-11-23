@@ -22,7 +22,6 @@ Send prompt: "Explain Docker in simple words."
 AI Response: Docker is a platform used to package applications and their dependencies into containers.
 So, Bedrock provides the AI models and APIs that applications can use. 
 
-
 ___________________________________________________________________________________________________________________________________________
 
 2. What is Kiro?
@@ -152,7 +151,7 @@ Note  :-
     Download the IDE for Windows or macOS.
 
     (2) Sign in and explore the IDE
-    Understand the editor, chat panel, agent mode and model selection.
+    Understand the editor, chat p   anel, agent mode and model selection.
 
     (3) Create a Python project
     Open a small Python project in Kiro and ask it to explain your existing code.
