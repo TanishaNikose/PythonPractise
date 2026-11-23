@@ -1,0 +1,27 @@
+Recursion is a programming technique where a function calls itself to solve a problem by breaking it down into smaller, 
+identical subproblems. Instead of using loops (for or while), the function repeats its logic by calling itself with
+modified inputs until it reaches a stopping condition.
+
+# Basic Syntax in Python :-
+Every recursive function in Python relies on two essential parts:
+
+Code :- 
+
+def recursive_function(parameter):
+  # 1. Base Case: The condition that stops the recursion
+  if base_condition:
+    return base_value
+
+  # 2. Recursive Case: The function calls itself with a smaller/modified input
+  else:
+    return recursive_function(modified_parameter)
+
+Base Case :- The stopping condition. Without it, the function will call itself forever until Python crashes with a RecursionError.
+Recursive Case :- The part where the function calls itself, moving the input closer to the base case with each step.
+
+
+Key Tips to Remember
+
+• Always include a return statement before your recursive call if you expect a calculated result back; otherwise, Python will return None.
+• Watch the recursion limit. Python limits recursion depth to 1,000 calls by default to prevent infinite loops from crashing your computer's 
+memory (you can check this using sys.getrecursionlimit()). For massive datasets, standard loops are usually faster and safer.
