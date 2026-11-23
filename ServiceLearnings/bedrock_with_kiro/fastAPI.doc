@@ -1,0 +1,30 @@
+FastAPI kya hai?
+FastAPI ek Python web framework hai — jisse hum API bana sakte hain.
+
+Simple words mein:
+
+Tumhara React frontend kuch maangta hai (jaise AI response)
+FastAPI us request ko sunта hai aur jawab deta hai
+
+Ek simple example dekho:
+
+from fastapi import FastAPI
+
+app = FastAPI()
+
+# GET request — browser se directly open kar sakte ho
+@app.get("/")
+def home():
+    return {"message": "Hello! Backend chal raha hai!"}
+
+# POST request — React frontend yahan message bhejega
+@app.post("/chat")
+def chat(user_message: str):
+    return {"response": f"Tumne likha: {user_message}"}
+
+
+FastAPI ke 3 main concepts:
+Concept	Matlab
+@app.get("/")	: Browser se GET request aane par yeh function chale
+@app.post("/chat")	: Frontend se POST request aane par yeh function chale
+return {}	: JSON format mein response wapas bhejo

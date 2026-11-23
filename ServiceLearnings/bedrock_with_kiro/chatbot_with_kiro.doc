@@ -1,0 +1,309 @@
+1. What exactly are we going to build?
+
+Recommended project :- 
+AI Chatbot using Amazon Bedrock + Kiro
+
+The idea is to create a chatbot with a modern interface, similar to ChatGPT.
+
+The user will:
+1. Open the chatbot website.
+2. Enter a question in the chat input.
+3. Click Send.
+4. The frontend sends the question to the Python backend.
+5. Python uses Boto3 to communicate with Amazon Bedrock.
+6. Bedrock processes the prompt using a foundation model.
+7. The response comes back to Python.
+8. Python sends the response to the frontend.
+9. The chatbot displays the answer.
+
+This will give an end-to-end application rather than just a Python script that invokes a Bedrock model.
+
+
+2. Application architecture
+
+
+Here is the architecture recommend:
+
+Chat UI · Input box · Send button · Messages
+      |
+      |
+HTTP API / JSON
+      |
+      |
+Backend — Python + FastAPI
+      |
+      |
+Receive prompt · Validate input · Handle response
+      |
+      |
+Boto3 SDK
+      |
+      |
+AWS — Amazon Bedrock
+      |
+      |
+Foundation Model · Converse API · AI response
+      |
+      |
+Response returns through the same path
+      |
+      |
+Chatbot displays the AI response
+
+
+Technologies we will use:
+Layer	             Technology	                     Purpose
+Frontend	         React.js	                     Chatbot interface
+Styling	             CSS	                         Modern UI and responsive design
+Backend	             Python + FastAPI	             API and application logic
+AWS SDK	             Boto3                           Connect Python to AWS
+AI Service	         Amazon Bedrock	                 Generate AI responses
+IDE	                 Kiro	                         Build, modify, debug and test the application
+
+I recommend React.js instead of plain HTML, CSS and JavaScript because it will give you a better opportunity to learn how a real frontend application works.
+
+_________________
+
+3. How should we proceed?
+I would divide the project into six phases.
+1. Phase 1 — Understand and prepare the AWS environment
+   
+   Before writing code, verify:
+   - AWS account access.
+   - IAM permissions for Amazon Bedrock.
+   - AWS region (you previously used us-east-1).
+   - Foundation model access and availability.
+   - Boto3 connectivity.
+   First, make a simple Python script that sends a prompt to Bedrock and prints the response.
+   
+   First milestone
+    Successfully receive a response from Bedrock using Boto3.
+2. Phase 2 — Build the Python backend
+   
+   Use FastAPI to create an API.
+   
+   Example endpoints:
+   - GET / — Check whether the backend is running.
+   - POST /chat — Receive a user message and return the Bedrock response.
+   Learn how FastAPI receives JSON requests and returns JSON responses.
+3. Phase 3 — Connect Python with Bedrock
+   - Configure Boto3.
+   - Create a Bedrock Runtime client.
+   - Use the Converse API.
+   - Send the user's prompt.
+   - Extract the model's response.
+   - Handle errors such as invalid credentials, access denied and throttling.
+   Keep AWS credentials outside your source code. Use an IAM role or an appropriately configured AWS profile.
+4. Phase 4 — Build the React frontend
+   
+   Create a proper chatbot interface with:
+   - Chat message area.
+   - User and AI message bubbles.
+   - Text input.
+   - Send button.
+   - Loading indicator.
+   - Clear chat button.
+   - Responsive layout.
+   Initially, use dummy responses to test the UI independently.
+5. Phase 5 — Integrate frontend and backend
+   
+   Connect React with FastAPI using HTTP requests.
+   
+   Test the complete flow:
+   
+   React → FastAPI → Boto3 → Bedrock → FastAPI → React.
+   
+   Then add proper error handling and, once the basic version works, streaming responses so the AI answer appears gradually.
+6. Phase 6 — Improve the application
+   
+   After the basic chatbot works, add:
+   - Conversation history.
+   - Multiple chat sessions.
+   - Markdown response formatting.
+   - Code block formatting.
+   - Model selection.
+   - Usage tracking (invocations and tokens).
+   - Logging and monitoring.
+   These are enhancements, not requirements for the first version.
+__________________
+
+4. How will Kiro fit into this project?
+This is the most important part of your assignment.
+
+You should not just write all the code yourself and use Kiro as a normal text editor. Try to use its Agentic Chat capabilities throughout development.
+
+For example:
+Your task	How Kiro can help
+Project setup	Create the project structure
+Backend	Generate FastAPI application
+AWS integration	Write Boto3 Bedrock code
+Frontend	Generate React components
+Integration	Connect frontend and backend
+Debugging	Identify and fix errors
+Testing	Generate test cases
+Documentation	Create README and setup instructions
+
+You should understand the generated code, run it, test it and verify the results yourself.
+
+_____________________
+
+5. Recommended project folder structure
+We can aim for this structure:
+bedrock-chatbot/
+│
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── ChatWindow.jsx
+│   │   │   ├── Message.jsx
+│   │   │   └── ChatInput.jsx
+│   │   ├── App.jsx
+│   │   └── App.css
+│   └── package.json
+│
+├── backend/
+│   ├── main.py
+│   ├── bedrock_service.py
+│   ├── config.py
+│   └── requirements.txt
+│
+├── .gitignore
+└── README.md
+
+
+
+6 Phases mein project divide kiya gaya hai:
+
+Phase	         Kaam
+Phase 1	         AWS environment setup + Boto3 se Bedrock test karna
+Phase 2	         FastAPI backend banana (/chat endpoint)
+Phase 3	         Python ko Bedrock se connect karna (Converse API)
+Phase 4	         React frontend banana (chat UI)
+Phase 5	         Frontend aur Backend ko integrate karna
+Phase 6	         Improvements — history, streaming, model selection, usage tracking
+___________________________________________________________________________________________________
+
+Overall architecture
+
+User (Browser)
+      |
+      | Types a message & clicks Send
+      ↓
+React.js Frontend  (runs on localhost:3000)
+      |
+      | HTTP POST /chat  →  JSON { "message": "..." }
+      ↓
+Python FastAPI Backend  (runs on localhost:8000)
+      |
+      | Boto3 SDK call
+      ↓
+Amazon Bedrock  (AWS Cloud - us-east-1)
+      |
+      | Foundation Model (Claude / Nova / Llama)
+      ↓
+AI Response returns back
+      |
+      ↓
+FastAPI → React → User screen pe display
+
+
+2. Step-by-Step Development Plan
+✅ Phase 1 — AWS Environment Prepare Karo
+AWS account mein Bedrock model access enable karo
+IAM user/role ko sahi permissions do
+Boto3 install karo aur ek simple Python script se Bedrock test karo
+Milestone: Terminal mein Bedrock ka response print ho jaye
+✅ Phase 2 — Python FastAPI Backend Banao
+FastAPI project setup karo
+Do endpoints banao:
+GET / → Backend health check
+POST /chat → User ka message lo, Bedrock se response lao
+Milestone: Postman ya browser se /chat call karo aur response aaye
+✅ Phase 3 — Backend ko Bedrock se Connect Karo
+Boto3 se bedrock-runtime client banao
+Converse API use karo prompt bhejne ke liye
+Error handling lagao (wrong credentials, access denied, throttling)
+Milestone: FastAPI ke through Bedrock ka real AI response aaye
+✅ Phase 4 — React Frontend Banao
+React project create karo
+Yeh components banao:
+Chat message area
+User aur AI message bubbles
+Text input box
+Send button
+Loading indicator
+Pehle dummy responses se UI test karo
+Milestone: Chatbot UI browser mein dikh rahi ho
+✅ Phase 5 — Frontend aur Backend Integrate Karo
+React se FastAPI ko HTTP request bhejo
+Full flow test karo: React → FastAPI → Bedrock → FastAPI → React
+Error handling add karo
+Milestone: Browser mein real AI responses aa rahe hon
+✅ Phase 6 — Improvements Karo
+Conversation history (purani baatein yaad rahen)
+Streaming responses (ChatGPT jaisa word-by-word aana)
+Multiple chat sessions
+Model selection (Claude, Nova, Llama choose kar sako)
+Usage tracking (tokens aur invocations)
+
+# project structure :-
+
+bedrock-chatbot/
+│
+├── frontend/                        ← React Application
+│   ├── public/
+│   │   └── index.html
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── ChatWindow.jsx       ← Messages display area
+│   │   │   ├── Message.jsx          ← Single message bubble
+│   │   │   └── ChatInput.jsx        ← Input box + Send button
+│   │   ├── App.jsx                  ← Main app component
+│   │   ├── App.css                  ← Styling
+│   │   └── index.js                 ← React entry point
+│   └── package.json                 ← Frontend dependencies
+│
+├── backend/                         ← Python FastAPI Application
+│   ├── main.py                      ← FastAPI routes & app entry
+│   ├── bedrock_service.py           ← Boto3 + Bedrock logic
+│   ├── config.py                    ← Region, model ID, settings
+│   └── requirements.txt             ← Python dependencies
+│
+├── .gitignore                       ← node_modules, __pycache__, .env ignore
+└── README.md                        ← Setup instructions
+
+
+4. AWS Prerequisites aur IAM Permissions
+    AWS Account mein kya hona chahiye:
+    Requirement	Kya karna hai
+    AWS Account	Active hona chahiye
+    Bedrock Model Access	AWS Console → Bedrock → Model Access → Enable karo
+    AWS Region	us-east-1 recommend hai (tumhara existing setup bhi same hai)
+    IAM User ya Role	Bedrock invoke karne ki permission ke saath
+    Boto3	pip install boto3
+    AWS Credentials	~/.aws/credentials mein configure karo
+
+
+Step 1 — User message type karta hai
+         React ka ChatInput.jsx → Send button click
+
+Step 2 — React HTTP request bhejta hai
+         POST http://localhost:8000/chat
+         Body: { "message": "Explain Docker" }
+
+Step 3 — FastAPI request receive karta hai
+         main.py ka /chat endpoint trigger hota hai
+         Input validate hota hai
+
+Step 4 — FastAPI Bedrock ko call karta hai
+         bedrock_service.py → Boto3 → Converse API
+         Model: Claude ya Nova
+
+Step 5 — Bedrock AI response generate karta hai
+         Token usage, response text wapas aata hai
+
+Step 6 — FastAPI response React ko bhejta hai
+         JSON: { "response": "Docker ek platform hai..." }
+
+Step 7 — React screen pe display karta hai
+         ChatWindow.jsx mein AI message bubble add hota hai

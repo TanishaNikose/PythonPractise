@@ -30,3 +30,15 @@ for i in range(len(list1)):
             list1[i] , list1[j] = list1[j], list1[i]
 
 print(list1)
+
+
+# Sorting Numbers - This code is sorting the numbers correctly but not sorting in the bubble sort exactly
+
+List1 = [7,3,2,6,5]
+
+for i in range(len(List1)):
+    for j in range(len(List1)):
+        if List1[i] < List1[j]:
+            List1[i], List1[j] = List1[j], List1[i]
+
+print(List1)
